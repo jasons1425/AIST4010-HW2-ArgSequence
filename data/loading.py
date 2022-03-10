@@ -44,7 +44,7 @@ def load_data_as_df(phase, fasta_fp=None):
         raise ValueError("Unknown phase")
     with open(fp) as handle:
         records = extract_class_and_seq(list(SeqIO.parse(handle, 'fasta')),
-                                        is_test=(phase=="test"))
+                                        is_test=(phase == "test"))
         df = pd.DataFrame(records, columns=cols)
     return df
 
@@ -56,5 +56,5 @@ def get_loader(seqs, tar_enc, pad_len=600, batch_size=256):
     tensor_seq = torch.tensor(ohe_enc).permute(0, 2, 1)
     tensor_tar = torch.tensor(tar_enc, dtype=torch.int64).reshape(-1, 1)
     ds = TensorDataset(tensor_seq, tensor_tar)
-    loader = DataLoader(ds, sampler=sampler, batch_size=batch_size)
+    loader = DataLoader(ds, sampler=None, batch_size=batch_size, shuffle=True)
     return loader
