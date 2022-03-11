@@ -50,7 +50,7 @@ class ProtCNN(nn.Module):
             conv1,
             act(),
             *res_layers,
-            pool(2),
+            pool(3),
             nn.Dropout(dropout),
             nn.Flatten(),
             fc_start,
