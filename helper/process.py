@@ -4,7 +4,7 @@ import copy
 
 
 def train_model(model, dataloaders, criterion, optimizer,
-                epochs, device, scheduler=None, half=False):
+                epochs, device, scheduler=None, half=False, to_long=False):
     since = time.time()
     losses = {phase: [] for phase in dataloaders}
     accs = {phase: [] for phase in dataloaders}
@@ -28,6 +28,8 @@ def train_model(model, dataloaders, criterion, optimizer,
                     if half:
                         inputs = inputs.half()
                     inputs, labels = inputs.to(device), labels.to(device)
+                    if to_long:
+                        inputs = inputs.long()
                     optimizer.zero_grad()
 
                     outputs = model(inputs)

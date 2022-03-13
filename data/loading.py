@@ -1,5 +1,5 @@
 from Bio import SeqIO
-from data.preprocess import TARGET_DICTIONARY, seq2ohe
+from data.preprocess import TARGET_DICTIONARY, seq2ohe, label_encode
 from data.sampler import get_weighted_sampler
 from torch.utils.data import DataLoader, TensorDataset
 import pandas as pd
@@ -49,12 +49,19 @@ def load_data_as_df(phase, fasta_fp=None):
     return df
 
 
-def get_loader(seqs, tar_enc, pad_len=600, batch_size=256):
-    ohe_enc = seq2ohe(seqs, pad_len=pad_len)
+def get_loader(seqs, tar_enc, pad_len=600, batch_size=256, label_enc=False, add_sampler=True):
+    if label_enc:
+        seq_enc = label_encode(seqs, pad_len=pad_len)
+        tensor_seq = torch.tensor(seq_enc).permute(0, 1)
+    else:
+        seq_enc = seq2ohe(seqs, pad_len=pad_len)
+        tensor_seq = torch.tensor(seq_enc).permute(0, 2, 1)
     tar_enc = tar_enc
-    sampler = get_weighted_sampler(tar_enc)
-    tensor_seq = torch.tensor(ohe_enc).permute(0, 2, 1)
     tensor_tar = torch.tensor(tar_enc, dtype=torch.int64).reshape(-1, 1)
+    if add_sampler:
+        sampler = get_weighted_sampler(tar_enc)
+    else:
+        sampler = None
     ds = TensorDataset(tensor_seq, tensor_tar)
-    loader = DataLoader(ds, sampler=None, batch_size=batch_size, shuffle=True)
+    loader = DataLoader(ds, sampler=sampler, batch_size=batch_size, shuffle=not add_sampler)
     return loader
