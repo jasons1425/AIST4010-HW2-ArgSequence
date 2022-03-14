@@ -30,7 +30,7 @@ def extract_class_and_seq(records, is_test=False):
 
 
 def load_data_as_df(phase, fasta_fp=None):
-    cols = ["arg_class", "target", "sequence"]
+    cols = ["arg_class", "target", "sequence"] if phase != "test" else ["id", "sequence"]
     if fasta_fp:
         fp = fasta_fp
     elif phase == "train":
@@ -39,7 +39,6 @@ def load_data_as_df(phase, fasta_fp=None):
         fp = val_fp
     elif phase == "test":
         fp = test_fp
-        cols = ["id", "sequence"]
     else:
         raise ValueError("Unknown phase")
     with open(fp) as handle:
@@ -49,7 +48,8 @@ def load_data_as_df(phase, fasta_fp=None):
     return df
 
 
-def get_loader(seqs, tar_enc, pad_len=600, batch_size=256, label_enc=False, add_sampler=True):
+def get_loader(seqs, tar_enc, pad_len=600, batch_size=256,
+               label_enc=False, add_sampler=True, shuffle=True):
     if label_enc:
         seq_enc = label_encode(seqs, pad_len=pad_len)
         tensor_seq = torch.tensor(seq_enc).permute(0, 1)
@@ -63,5 +63,7 @@ def get_loader(seqs, tar_enc, pad_len=600, batch_size=256, label_enc=False, add_
     else:
         sampler = None
     ds = TensorDataset(tensor_seq, tensor_tar)
-    loader = DataLoader(ds, sampler=sampler, batch_size=batch_size, shuffle=not add_sampler)
+    if add_sampler:
+        shuffle = False
+    loader = DataLoader(ds, sampler=sampler, batch_size=batch_size, shuffle=shuffle)
     return loader
