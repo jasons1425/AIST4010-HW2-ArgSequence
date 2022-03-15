@@ -35,12 +35,11 @@ def seq2ohe(seq, tokenizer=seq_tokenizer, pad_len=None):
     return encoded
 
 
-def bert_pt_preprocess(seq, pad_len=100):
-    def seq_preprocess(x, pad_len=100):
-        seq_len = len(x)
-        if seq_len < pad_len:
-            x = x + 'X' * (pad_len - seq_len)
-        x = x[:pad_len]  # only use the first pad_len characters
-        x = ' '.join(list(x))
-        x = re.sub(r"[UZOB]", "X", x)
-        return x
+def prottrans_preprocess(x, pad_len=100):
+    seq_len = len(x)
+    if seq_len < pad_len:
+        x = x + 'X' * (pad_len - seq_len)
+    x = x[:pad_len]  # only use the first pad_len characters
+    x = ' '.join(list(x))
+    x = re.sub(r"[UZOB]", "X", x)
+    return x
