@@ -8,22 +8,26 @@ from model.protcnn import ProtCNNftEmbedding
 PAD_LEN = 100
 BATCH_SIZE = 64
 df_train, df_valid = load_data_as_df("train"), load_data_as_df("valid")
-df_train["isarg"], df_valid["isarg"] = (df_train.target != 0), (df_valid.target != 0)
-train_cls, valid_cls = df_train.loc[df_train.isarg], df_valid.loc[df_valid.isarg]
-train_loader_cls = get_loader(train_cls.sequence, train_cls.target - 1,
+# df_train["isarg"], df_valid["isarg"] = (df_train.target != 0), (df_valid.target != 0)
+# train_cls, valid_cls = df_train.loc[df_train.isarg], df_valid.loc[df_valid.isarg]
+# train_loader_cls = get_loader(train_cls.sequence, train_cls.target - 1,
+#                               pad_len=PAD_LEN, batch_size=BATCH_SIZE, label_enc=True, add_sampler=False)
+# valid_loader_cls = get_loader(valid_cls.sequence, valid_cls.target - 1,
+#                               pad_len=PAD_LEN, batch_size=BATCH_SIZE, label_enc=True, add_sampler=False)
+train_loader_cls = get_loader(df_train.sequence, df_train.target,
                               pad_len=PAD_LEN, batch_size=BATCH_SIZE, label_enc=True, add_sampler=False)
-valid_loader_cls = get_loader(valid_cls.sequence, valid_cls.target - 1,
+valid_loader_cls = get_loader(df_valid.sequence, df_valid.target,
                               pad_len=PAD_LEN, batch_size=BATCH_SIZE, label_enc=True, add_sampler=False)
 dataloaders = {"train": train_loader_cls, "valid": valid_loader_cls}
 
 
 # setting up objects for training
 ENC_DIM = 512
-IN_DIM, OUT_DIM = 23+1, 14
+IN_DIM, OUT_DIM = 23+1, 15
 IN_KSIZE, RES_KSIZE = 3, 3
 RES_DIM, RES_BLKSIZE, RES_DIL = 128, 2, 2
 FC_BLKS = [4224, 1000]
-ACT, DROPOUT = torch.nn.SiLU, 0.6
+ACT, DROPOUT = torch.nn.ReLU, 0.6
 LR, MOMENTUM, DECAY = 1e-3, 0.9, 0.01
 HALF = True
 device = "cuda" if torch.cuda.is_available() else "cpu"
