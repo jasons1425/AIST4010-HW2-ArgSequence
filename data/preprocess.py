@@ -1,6 +1,7 @@
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils.np_utils import to_categorical
+import re
 
 
 TOKEN_DICTIONARY = {c: idx+1 for idx, c in enumerate("ABRNDCEQGHILKMFPSTWYVXZ")}
@@ -32,3 +33,14 @@ def seq2ohe(seq, tokenizer=seq_tokenizer, pad_len=None):
     encoded = label_encode(seq, tokenizer, pad_len)
     encoded = to_categorical(encoded)
     return encoded
+
+
+def bert_pt_preprocess(seq, pad_len=100):
+    def seq_preprocess(x, pad_len=100):
+        seq_len = len(x)
+        if seq_len < pad_len:
+            x = x + 'X' * (pad_len - seq_len)
+        x = x[:pad_len]  # only use the first pad_len characters
+        x = ' '.join(list(x))
+        x = re.sub(r"[UZOB]", "X", x)
+        return x
