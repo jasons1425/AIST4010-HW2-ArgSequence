@@ -143,3 +143,4 @@ cython_debug/
 
 # Model-related
 *.pth
+submission.csv
