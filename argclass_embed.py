@@ -46,7 +46,7 @@ scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer,
 
 
 # train the model
-EPOCHS = 600
+EPOCHS = 2000
 best_model, losses, accs = train_model(model, dataloaders, criterion, optimizer,
                                        EPOCHS, device, half=HALF, to_long=True, scheduler=None)
 
