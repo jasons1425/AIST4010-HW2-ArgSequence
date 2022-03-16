@@ -17,11 +17,11 @@ dataloaders = {"train": train_loader_cls, "valid": valid_loader_cls}
 
 
 # setting up objects for training
-ENC_DIM = 256
+ENC_DIM = 128
 IN_DIM, OUT_DIM = 23+1, 15
 IN_KSIZE = 3
-FC_BLKS = [8448, 1000]
-ACT, DROPOUT = torch.nn.ReLU, 0.5
+FC_BLKS = [4224, 1000]
+ACT, DROPOUT = torch.nn.ReLU, 0.6
 LR, MOMENTUM, DECAY = 1e-3, 0.9, 0.01
 HALF = True
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -43,4 +43,4 @@ EPOCHS = 30
 best_model, losses, accs = train_model_prottrans(model, dataloaders, criterion, optimizer, EPOCHS,
                                                  device, embedder, half=HALF, to_long=True, scheduler=None)
 
-torch.save(model.state_dict(),  f"isarg_prottrans.pth")
+torch.save(model.state_dict(),  f"argclass_prottrans.pth")
