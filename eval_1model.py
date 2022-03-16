@@ -19,7 +19,7 @@ test_loader = get_loader(df_test.sequence, df_test.index, pad_len=PAD_LEN, batch
 
 
 # argclass model
-argcls_model_weights = r"trials/argclass_embed9699.pth"
+argcls_model_weights = r"trials/argclass_embed9690.pth"
 argcls_model_config = {
     "in_dim": 24,
     "out_dim": 15,
