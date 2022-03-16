@@ -65,7 +65,7 @@ def train_model(model, dataloaders, criterion, optimizer,
 
 
 def train_model_prottrans(model, dataloaders, criterion, optimizer, epochs,
-                          device, scheduler=None, half=False, to_long=False):
+                          device, embedder, scheduler=None, half=False, to_long=False):
     since = time.time()
     losses = {phase: [] for phase in dataloaders}
     accs = {phase: [] for phase in dataloaders}
@@ -93,9 +93,11 @@ def train_model_prottrans(model, dataloaders, criterion, optimizer, epochs,
                     if to_long:
                         inputs = inputs.long()
                         masks = masks.long()
+                    with torch.no_grad():
+                        embedding = embedder(input_ids=inputs, attention_mask=masks)[0].half()
                     optimizer.zero_grad()
 
-                    outputs = model(inputs, masks)
+                    outputs = model(embedding)
                     _, preds = torch.topk(outputs, 1, dim=1)
                     loss = criterion(outputs, labels.flatten())
                     running_loss += loss.item() * len(inputs)

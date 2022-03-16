@@ -1,0 +1,2 @@
+pad     batch   sampler     enc_dim     epoch       out_dim     fc_blks     act     dropout     lr      moment  decay   half    acc
+100     64      no          256         30          15          8448, 1000  relu    0.5         1e-3    0.9     0.01    true    .9638
