@@ -26,7 +26,7 @@ ENC_DIM = 512
 IN_DIM, OUT_DIM = 23+1, 15
 IN_KSIZE, RES_KSIZE = 3, 3
 RES_DIM, RES_BLKSIZE, RES_DIL = 128, 2, 2
-FC_BLKS = [4224, 1000]
+FC_BLKS = [4224, 1200]
 ACT, DROPOUT = torch.nn.ReLU, 0.6
 LR, MOMENTUM, DECAY = 1e-3, 0.9, 0.01
 HALF = True
@@ -46,7 +46,7 @@ scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer,
 
 
 # train the model
-EPOCHS = 4000
+EPOCHS = 2000
 best_model, losses, accs = train_model(model, dataloaders, criterion, optimizer,
                                        EPOCHS, device, half=HALF, to_long=True, scheduler=None)
 

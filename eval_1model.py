@@ -19,7 +19,7 @@ test_loader = get_loader(df_test.sequence, df_test.index, pad_len=PAD_LEN, batch
 
 
 # argclass model
-argcls_model_weights = r"trials/argclass_embed9690.pth"
+argcls_model_weights = r"trials/argclass_embed9695.pth"
 argcls_model_config = {
     "in_dim": 24,
     "out_dim": 15,
@@ -28,7 +28,7 @@ argcls_model_config = {
     "res_ksize": 3,
     "resblk_size": 2,
     "res_dil": 2,
-    "fc_blks": [4224, 1000],
+    "fc_blks": [4224, 1200],
     "enc_dim": 512,
     "seq_len": 100,
     "act": torch.nn.ReLU,
