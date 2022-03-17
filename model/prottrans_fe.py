@@ -52,6 +52,7 @@ class ProtTransCNN(nn.Module):
             fc_layers.extend([fc, act()])
         self.dropout = nn.Dropout(dropout)
         self.stack = nn.Sequential(
+            nn.Dropout(dropout),  # randomly 'mask' the sequences at some positions
             norm(1024),
             conv1,
             act(),
@@ -66,7 +67,6 @@ class ProtTransCNN(nn.Module):
         )
 
     def forward(self, embedding):
-        embedding = self.dropout(embedding)  # randomly 'mask' the sequences at some positions
         embedding = embedding.permute(0, 2, 1)
         return self.stack(embedding)
 
@@ -87,9 +87,9 @@ class ProtTransCNNv2(nn.Module):
             if init:
                 init(fc.weight)
             fc_layers.extend([fc, act()])
-        self.dropout = nn.Dropout(dropout)
         self.stack = nn.Sequential(
-            # norm(2048),
+            nn.Dropout(dropout),  # randomly 'mask' the sequences at some positions
+            norm(2048),
             nn.Flatten(),
             fc_start,
             act(),
@@ -103,8 +103,6 @@ class ProtTransCNNv2(nn.Module):
         cls_tokens = embedding[:, 0, :]
         word_tokens_avg = torch.mean(embedding[:, 1:seq_len-1, :], dim=1)
         embedding = torch.cat((cls_tokens, word_tokens_avg), dim=1)
-        embedding = self.dropout(embedding)  # randomly 'mask' the sequences at some positions
-        # embedding = embedding.permute(0, 2, 1)
         return self.stack(embedding)
 
 
