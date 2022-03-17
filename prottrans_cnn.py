@@ -17,11 +17,11 @@ dataloaders = {"train": train_loader_cls, "valid": valid_loader_cls}
 
 
 # setting up objects for training
-ENC_DIM = 128
+ENC_DIM = 256
 IN_DIM, OUT_DIM = 23+1, 15
 IN_KSIZE = 3
-FC_BLKS = [4224, 1000]
-ACT, DROPOUT = torch.nn.ReLU, 0.6
+FC_BLKS = [8448, 1000]
+ACT, DROPOUT = torch.nn.ReLU, 0.7
 LR, MOMENTUM, DECAY = 1e-3, 0.9, 0.01
 HALF = True
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -39,7 +39,7 @@ scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer,
 
 
 # train the model
-EPOCHS = 30
+EPOCHS = 50
 best_model, losses, accs = train_model_prottrans(model, dataloaders, criterion, optimizer, EPOCHS,
                                                  device, embedder, half=HALF, to_long=True, scheduler=None)
 
