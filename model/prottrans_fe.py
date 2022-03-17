@@ -71,4 +71,40 @@ class ProtTransCNN(nn.Module):
         return self.stack(embedding)
 
 
+class ProtTransCNNv2(nn.Module):
+    def __init__(self, out_dim, fc_blks=(None, 1024), act=nn.ReLU,
+                 norm=nn.BatchNorm1d, dropout=0, init=nn.init.kaiming_normal_):
+        super(ProtTransCNNv2, self).__init__()
+        assert fc_blks[0] is not None, "Please specify the in_dim of first FC layer"
+        fc_start = nn.Linear(fc_blks[0], fc_blks[1])
+        fc_last = nn.Linear(fc_blks[-1], out_dim)
+        if init:
+            init(fc_start.weight)
+            init(fc_last.weight)
+        fc_layers = []
+        for idx in range(2,  len(fc_blks)):
+            fc = nn.Linear(fc_blks[idx-1], fc_blks[idx])
+            if init:
+                init(fc.weight)
+            fc_layers.extend([fc, act()])
+        self.dropout = nn.Dropout(dropout)
+        self.stack = nn.Sequential(
+            # norm(2048),
+            nn.Flatten(),
+            fc_start,
+            act(),
+            *fc_layers,
+            nn.Dropout(dropout),
+            fc_last
+        )
+
+    def forward(self, embedding):
+        seq_len = embedding.size(1)
+        cls_tokens = embedding[:, 0, :]
+        word_tokens_avg = torch.mean(embedding[:, 1:seq_len-1, :], dim=1)
+        embedding = torch.cat((cls_tokens, word_tokens_avg), dim=1)
+        embedding = self.dropout(embedding)  # randomly 'mask' the sequences at some positions
+        # embedding = embedding.permute(0, 2, 1)
+        return self.stack(embedding)
+
 
