@@ -28,7 +28,7 @@ IN_KSIZE, RES_KSIZE = 5, 3
 RES_DIM, RES_BLKSIZE, RES_DIL = 128, 2, 2
 FC_BLKS = [4224, 1000]
 ACT, DROPOUT = torch.nn.ReLU, 0.6
-LR, MOMENTUM, DECAY = 1e-3, 0.9, 0.01
+LR, MOMENTUM, DECAY = 1e-4, 0.9, 0.01
 HALF = True
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -46,7 +46,7 @@ scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer,
 
 
 # train the model
-EPOCHS = 100
+EPOCHS = 400
 best_model, losses, accs = train_model(model, dataloaders, criterion, optimizer,
                                        EPOCHS, device, half=HALF, to_long=True, scheduler=scheduler)
 
