@@ -69,10 +69,10 @@ def get_loader(seqs, tar_enc, pad_len=600, batch_size=256,
 
 
 def get_loader_prottrans(seqs, tar_enc, pad_len=100, batch_size=256,
-                         add_sampler=True, shuffle=True):
+                         add_sampler=True, shuffle=True, special_tokens=False):
     padded_seq = seqs.apply(lambda x: prottrans_preprocess(x, pad_len=pad_len))
     tokenizer = get_prottrans_tokenizer()
-    ids = tokenizer.batch_encode_plus(padded_seq, add_special_tokens=False,
+    ids = tokenizer.batch_encode_plus(padded_seq, add_special_tokens=special_tokens,
                                       pad_to_max_length=True)
     input_ids = torch.tensor(ids['input_ids'])
     attention_masks = torch.tensor(ids['attention_mask'])
