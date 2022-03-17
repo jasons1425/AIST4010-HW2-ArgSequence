@@ -1,5 +1,6 @@
 import torch
 import pandas as pd
+from helper.evaluation import evaluate_f1score
 from data.loading import load_data_as_df, get_loader
 from model.protcnn import ProtCNNftEmbedding, ProtCNN
 
@@ -13,7 +14,10 @@ store_fp = r"submission.csv"
 PAD_LEN = 100
 BATCH_SIZE = 64
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
+df_valid = load_data_as_df("valid")
 df_test = load_data_as_df("test", fasta_fp=test_fp)
+valid_loader = get_loader(df_valid.sequence, df_valid.target,
+                          pad_len=PAD_LEN, batch_size=BATCH_SIZE, label_enc=True, add_sampler=False)
 test_loader = get_loader(df_test.sequence, df_test.index, pad_len=PAD_LEN, batch_size=BATCH_SIZE,
                          label_enc=True, add_sampler=False, shuffle=False)
 
@@ -36,8 +40,11 @@ argcls_model_config = {
 }
 argcls_model = ProtCNNftEmbedding(**argcls_model_config).to(device)
 argcls_model.load_state_dict(torch.load(argcls_model_weights))
-argcls_model.eval()
+precision, recall, f1 = evaluate_f1score(argcls_model, valid_loader, device)
+print(f"precision is {precision:.5f}, recall is {recall:.5f}, f1-score is {f1:.5f}")
 
+
+argcls_model.eval()
 results = pd.DataFrame({'id':[], 'label':[]})
 for inputs, ids in test_loader:
     inputs = inputs.to(device)
