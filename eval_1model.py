@@ -23,20 +23,20 @@ test_loader = get_loader(df_test.sequence, df_test.index, pad_len=PAD_LEN, batch
 
 
 # argclass model
-argcls_model_weights = r"trials/argclass_embed9695.pth"
+argcls_model_weights = r"trials/argclass_embed8302.pth"
 argcls_model_config = {
     "in_dim": 24,
     "out_dim": 15,
-    "in_ksize": 3,
-    "res_dim": 128,
+    "in_ksize": 15,
+    "res_dim": 256,
     "res_ksize": 3,
     "resblk_size": 2,
     "res_dil": 2,
-    "fc_blks": [4224, 1200],
+    "fc_blks": [8448, 1000],
     "enc_dim": 512,
     "seq_len": 100,
     "act": torch.nn.ReLU,
-    "dropout": 0.6,
+    "dropout": 0.5,
 }
 argcls_model = ProtCNNftEmbedding(**argcls_model_config).to(device)
 argcls_model.load_state_dict(torch.load(argcls_model_weights))
