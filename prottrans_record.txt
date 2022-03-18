@@ -4,4 +4,5 @@ pad     batch   sampler     enc_dim     epoch       out_dim     fc_blks         
 100     64      no          256         50          15          8448, 800               relu    0.5         1e-3    0.9     0.01    true    false   .9681 (of)
 100     64      no          256         30          15          2048, 1024, 2048, 1024  relu    0.6         1e-3    0.9     0.01    true    true    .9065
 100     64      no          256         5           15          2048, 1024              relu    0.6         1e-3    0.9     0.01    true    true    .9127
-100     64      no          256         5           15          2048, 512               relu    0.6         1e-3    0.9     0.01    true    true    .9141 (xavier init)c
+100     64      no          256         5           15          2048, 512               relu    0.6         1e-3    0.9     0.01    true    true    .9141 (xavier init)
+100     64      no          256         100         15          2048, 512               relu    0.6         1e-3    0.9     0.01    true    true    .9494 (xavier init)

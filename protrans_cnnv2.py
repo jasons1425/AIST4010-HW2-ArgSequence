@@ -20,14 +20,14 @@ dataloaders = {"train": train_loader_cls, "valid": valid_loader_cls}
 ENC_DIM = 256
 IN_DIM, OUT_DIM = 23+1, 15
 IN_KSIZE = 3
-FC_BLKS = [2048, 1024, 2048, 1024]
+FC_BLKS = [2048, 512]
 ACT, DROPOUT = torch.nn.ReLU, 0.6
 LR, MOMENTUM, DECAY = 1e-3, 0.9, 0.01
 HALF = True
 device = "cuda" if torch.cuda.is_available() else "cpu"
 embedder = get_prottrans_model()
 model = ProtTransCNNv2(OUT_DIM, FC_BLKS,
-                       act=ACT, dropout=DROPOUT)
+                       act=ACT, dropout=DROPOUT, init=torch.nn.init.xavier_normal_)
 if HALF:
     model = model.half()
 model = model.to(device)
@@ -35,12 +35,12 @@ criterion = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(model.parameters(),
                             lr=LR, momentum=MOMENTUM, weight_decay=DECAY)
 scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer,
-                                              lr_lambda=lambda epoch: 1 if epoch < 200 else 0.1)
+                                              lr_lambda=lambda epoch: 1 if epoch < 40 else (0.1 if epoch < 80 else 0.01))
 
 
 # train the model
-EPOCHS = 30
+EPOCHS = 100
 best_model, losses, accs = train_model_prottrans(model, dataloaders, criterion, optimizer, EPOCHS,
-                                                 device, embedder, half=HALF, to_long=True, scheduler=None)
+                                                 device, embedder, half=HALF, to_long=True, scheduler=scheduler)
 
 torch.save(model.state_dict(),  f"argclass_prottransv2.pth")
