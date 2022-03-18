@@ -105,7 +105,7 @@ class ProtCNN(nn.Module):
 class ProtCNNftEmbedding(nn.Module):
     def __init__(self, in_dim, out_dim, in_ksize, res_dim, res_ksize, resblk_size, res_dil=1,
                  fc_blks=(None, 1024,), enc_dim=512, seq_len=400, pool=nn.MaxPool1d, act=nn.ReLU,
-                 norm=nn.BatchNorm1d, dropout=0, init=nn.init.kaiming_normal_):
+                 norm=nn.BatchNorm1d, dropout=0, init=nn.init.kaiming_normal_, add_init_dropout = True):
         super(ProtCNNftEmbedding, self).__init__()
         self.embed = Embedder(in_dim, enc_dim)
         self.position_enc = PositionalEncoder(enc_dim, seq_len)
@@ -125,8 +125,7 @@ class ProtCNNftEmbedding(nn.Module):
             if init:
                 init(fc.weight)
             fc_layers.extend([fc, act()])
-        self.stack = nn.Sequential(
-            # nn.Dropout(dropout),
+        stack = [
             conv1,
             act(),
             *res_layers,
@@ -138,7 +137,10 @@ class ProtCNNftEmbedding(nn.Module):
             *fc_layers,
             nn.Dropout(dropout),
             fc_last
-        )
+        ]
+        if add_init_dropout:
+            stack.insert(0, nn.Dropout(dropout))
+        self.stack = nn.Sequential(*stack)
 
     def forward(self, x):
         x = self.embed(x)

@@ -5,7 +5,7 @@ from model.protcnn import ProtCNNftEmbedding
 
 
 # only select the data belonging to arg class
-PAD_LEN = 200
+PAD_LEN = 100
 BATCH_SIZE = 64
 df_train, df_valid = load_data_as_df("train"), load_data_as_df("valid")
 df_train["isarg"], df_valid["isarg"] = (df_train.target != 0), (df_valid.target != 0)
@@ -21,8 +21,8 @@ ENC_DIM = 1024
 IN_DIM, OUT_DIM = 23+1, 2
 IN_KSIZE, RES_KSIZE = 3, 3
 RES_DIM, RES_BLKSIZE, RES_DIL = 128, 5, 2
-FC_BLKS = [8448, 400]
-ACT, DROPOUT = torch.nn.ReLU, 0.6
+FC_BLKS = [4224, 256]
+ACT, DROPOUT = torch.nn.ReLU, 0.5
 LR, MOMENTUM, DECAY = 1e-3, 0.9, 0.01
 HALF = True
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -30,7 +30,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 model = ProtCNNftEmbedding(IN_DIM, OUT_DIM, IN_KSIZE, RES_DIM, RES_KSIZE,
                            RES_BLKSIZE, RES_DIL, FC_BLKS, ENC_DIM, PAD_LEN,
                            act=ACT, dropout=DROPOUT, init=torch.nn.init.xavier_normal_)
-model.load_state_dict(torch.load(r"trials/isarg_embed9654-2.pth"))
+# model.load_state_dict(torch.load(r"trials/isarg_embed9599.pth"))
 if HALF:
     model = model.half()
 model = model.to(device)

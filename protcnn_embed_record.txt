@@ -17,8 +17,8 @@ pad     batch   sampler     enc_dim     epoch      out_dim     in_ksize    res_k
 200     64      no          512         400        15          3           3           128         2               2           4224, 1000  relu    0.4         1e-3    0.9     0.01    true    .9617 (X 1st dropout)
 200     64      no          512         400        15          3           3           128         5               2           8448, 800   relu    0.5         1e-3    0.9     0.01    true    .9654 (X 1st dropout)
 200     64      no          512         200        2           3           3           128         5               2           8448, 800   relu    0.5         1e-3    0.9     0.01    true    .9592 (X 1st dropout, xavier_init)
-200     64      no          512         200        2           3           3           128         5               2           8448, 400   relu    0.5         1e-3    0.9     0.01    true    .9654 (X 1st dropout, xavier_init)
-200     64      no          512         200        2           3           3           128         2               2           8448, 128   relu    0.5         1e-3    0.9     0.01    true    .9608 (X 1st dropout, xavier_init)
-100     64      no          512         200        2           3           3           128         5               2           8448, 400   relu    0.5         1e-3    0.9     0.01    true    .9628 (X 1st dropout, xavier_init)
-100     128     no          512         200        2           3           3           128         5               2           8448, 256   relu    0.5         1e-3    0.9     0.01    true    .9599 (X 1st dropout, xavier_init)
+200     64      no          1024        200        2           3           3           128         5               2           8448, 400   relu    0.5         1e-3    0.9     0.01    true    .9654 (X 1st dropout, xavier_init)
+200     64      no          1024        200        2           3           3           128         2               2           8448, 128   relu    0.5         1e-3    0.9     0.01    true    .9608 (X 1st dropout, xavier_init)
+100     64      no          1024        200        2           3           3           128         5               2           4224, 400   relu    0.5         1e-3    0.9     0.01    true    .9628 (X 1st dropout, xavier_init)
+100     128     no          1024        200        2           3           3           128         5               2           4224, 256   relu    0.5         1e-3    0.9     0.01    true    .9599 (X 1st dropout, xavier_init)
 
