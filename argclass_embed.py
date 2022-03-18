@@ -25,8 +25,8 @@ dataloaders = {"train": train_loader_cls, "valid": valid_loader_cls}
 ENC_DIM = 512
 IN_DIM, OUT_DIM = 23+1, 15
 IN_KSIZE, RES_KSIZE = 3, 3
-RES_DIM, RES_BLKSIZE, RES_DIL = 128, 2, 2
-FC_BLKS = [8448, 1000]
+RES_DIM, RES_BLKSIZE, RES_DIL = 128, 5, 2
+FC_BLKS = [8448, 800]
 ACT, DROPOUT = torch.nn.ReLU, 0.5
 LR, MOMENTUM, DECAY = 1e-4, 0.9, 0.01
 HALF = True
@@ -34,7 +34,6 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 model = ProtCNNftEmbedding(IN_DIM, OUT_DIM, IN_KSIZE, RES_DIM, RES_KSIZE,
                            RES_BLKSIZE, RES_DIL, FC_BLKS, ENC_DIM, PAD_LEN,
                            act=ACT, dropout=DROPOUT)
-model.load_state_dict(torch.load(r"trials/argclass_embed9551.pth"))
 
 
 if HALF:

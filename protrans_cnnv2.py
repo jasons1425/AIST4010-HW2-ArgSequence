@@ -5,23 +5,23 @@ from model.prottrans_fe import ProtTransCNNv2, get_prottrans_model
 
 
 # only select the data belonging to arg class
-PAD_LEN = 100
+PAD_LEN = 200
 BATCH_SIZE = 64
 df_train, df_valid = load_data_as_df("train"), load_data_as_df("valid")
-# df_train["isarg"], df_valid["isarg"] = (df_train.target != 0), (df_valid.target != 0)
-train_loader_cls = get_loader_prottrans(df_train.sequence, df_train.target, pad_len=PAD_LEN,
+df_train["isarg"], df_valid["isarg"] = (df_train.target != 0), (df_valid.target != 0)
+train_loader_cls = get_loader_prottrans(df_train.sequence, df_train.isarg, pad_len=PAD_LEN,
                                         batch_size=BATCH_SIZE, add_sampler=False, special_tokens=True)
-valid_loader_cls = get_loader_prottrans(df_valid.sequence, df_valid.target, pad_len=PAD_LEN,
+valid_loader_cls = get_loader_prottrans(df_valid.sequence, df_valid.isarg, pad_len=PAD_LEN,
                                         batch_size=BATCH_SIZE, add_sampler=False, special_tokens=True)
 dataloaders = {"train": train_loader_cls, "valid": valid_loader_cls}
 
 
 # setting up objects for training
 ENC_DIM = 256
-IN_DIM, OUT_DIM = 23+1, 15
+IN_DIM, OUT_DIM = 23+1, 2
 IN_KSIZE = 3
 FC_BLKS = [2048, 512]
-ACT, DROPOUT = torch.nn.ReLU, 0.6
+ACT, DROPOUT = torch.nn.ReLU, 0.5
 LR, MOMENTUM, DECAY = 1e-3, 0.9, 0.01
 HALF = True
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -39,8 +39,8 @@ scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer,
 
 
 # train the model
-EPOCHS = 100
+EPOCHS = 30
 best_model, losses, accs = train_model_prottrans(model, dataloaders, criterion, optimizer, EPOCHS,
-                                                 device, embedder, half=HALF, to_long=True, scheduler=scheduler)
+                                                 device, embedder, half=HALF, to_long=True, scheduler=None)
 
 torch.save(model.state_dict(),  f"argclass_prottransv2.pth")
