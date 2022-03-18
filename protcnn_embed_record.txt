@@ -14,3 +14,4 @@ pad     batch   sampler     enc_dim     epoch      out_dim     in_ksize    res_k
 100     64      no          512         400        15          5           3           128         2               2           4224, 1000  relu    0.6         1e-3    0.9     0.01    true    .8640
 200     64      no          512         400        15          3           3           128         2               2           4224, 1000  relu    0.6         1e-3    0.9     0.01    true    .9551 (X 1st dropout)
 200     64      no          512         400+400    15          3           3           128         2               2           4224, 1000  relu    0.6         1e-3    0.9     0.01    true    .9585 (pretrained 9551)
+200     64      no          512         400        15          3           3           128         2               2           4224, 1000  relu    0.4         1e-3    0.9     0.01    true    .9617
