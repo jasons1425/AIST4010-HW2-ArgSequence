@@ -126,7 +126,7 @@ class ProtCNNftEmbedding(nn.Module):
                 init(fc.weight)
             fc_layers.extend([fc, act()])
         self.stack = nn.Sequential(
-            nn.Dropout(dropout),
+            # nn.Dropout(dropout),
             conv1,
             act(),
             *res_layers,
