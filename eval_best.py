@@ -7,8 +7,9 @@ from model.protcnn import ProtCNNftEmbedding, ProtCNN
 
 
 # define the test data and the data path to export the results
-test_fp = r""
+test_fp = r"D:\Documents\datasets\AIST4010\arg sequences\data\test.fasta"
 store_fp = r"submission.csv"
+assert test_fp is not None
 
 
 # only select the data belonging to arg class
@@ -46,11 +47,11 @@ isarg_model = ProtCNNftEmbedding(**isarg_model_config).to(device)
 isarg_model.load_state_dict(torch.load(isarg_model_weights))
 precision, recall, f1 = evaluate_f1score(isarg_model, valid_loader_isarg, device)
 print(f"isarg validation: precision is {precision:.5f}, recall is {recall:.5f}, f1-score is {f1:.5f}")
-use_isarg = True
+use_isarg = False
 
 
 # argclass model
-argcls_model_weights = r"trials/argclass_embed9699.pth"
+argcls_model_weights = r"trials/argclass_embed9711.pth"
 argcls_model_config = {
     "in_dim": 24,
     "out_dim": 15,
@@ -67,12 +68,12 @@ argcls_model_config = {
 }
 argcls_model = ProtCNNftEmbedding(**argcls_model_config).to(device)
 argcls_model.load_state_dict(torch.load(argcls_model_weights))
-precision, recall, f1 = evaluate_f1score(argcls_model, valid_loader_cls, device, use_isarg=isarg_model)
+precision, recall, f1 = evaluate_f1score(argcls_model, valid_loader_cls, device, use_isarg=None)
 print(f"argcls1 validation: precision is {precision:.5f}, recall is {recall:.5f}, f1-score is {f1:.5f}")
 
 
 # argclass model
-argcls_model_weights2 = r"trials/argclass_embed9695.pth"
+argcls_model_weights2 = r"trials/argclass_embed9699.pth"
 argcls_model_config2 = {
     "in_dim": 24,
     "out_dim": 15,
@@ -81,7 +82,7 @@ argcls_model_config2 = {
     "res_ksize": 3,
     "resblk_size": 2,
     "res_dil": 2,
-    "fc_blks": [4224, 1200],
+    "fc_blks": [4224, 1000],
     "enc_dim": 512,
     "seq_len": 100,
     "act": torch.nn.ReLU,
@@ -89,9 +90,9 @@ argcls_model_config2 = {
 }
 argcls_model2 = ProtCNNftEmbedding(**argcls_model_config2).to(device)
 argcls_model2.load_state_dict(torch.load(argcls_model_weights2))
-precision, recall, f1 = evaluate_f1score(argcls_model2, valid_loader_cls, device, use_isarg=isarg_model)
+precision, recall, f1 = evaluate_f1score(argcls_model2, valid_loader_cls, device, use_isarg=None)
 print(f"argcls2 validation: precision is {precision:.5f}, recall is {recall:.5f}, f1-score is {f1:.5f}")
-use_argcls_model2 = False
+use_argcls_model2 = True
 
 
 isarg_model.eval()
